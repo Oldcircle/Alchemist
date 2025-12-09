@@ -20,6 +20,7 @@ export interface ElementItem {
   isNew?: boolean; // For animation purposes
   discoveredAt?: number;
   flavorText?: string;
+  parents?: string[]; // IDs of the two elements that created this
 }
 
 export interface CombinationResult {

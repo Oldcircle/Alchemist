@@ -114,7 +114,8 @@ export default function App() {
             description: result.description,
             isNew: true,
             discoveredAt: Date.now(),
-            flavorText: result.flavorText 
+            flavorText: result.flavorText,
+            parents: [itemA.id, itemB.id]
           };
           setInventory(prev => [newElement, ...prev]);
         }

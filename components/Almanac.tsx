@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ElementItem, Language } from '../types';
 import { getText } from '../utils/translations';
@@ -16,6 +17,11 @@ export const Almanac: React.FC<AlmanacProps> = ({ inventory, lang, onClose }) =>
   const filteredInventory = inventory.filter(item => 
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const getParentElements = (item: ElementItem): ElementItem[] => {
+    if (!item.parents) return [];
+    return item.parents.map(id => inventory.find(i => i.id === id)).filter(Boolean) as ElementItem[];
+  };
 
   return (
     <div className="w-full flex flex-col h-full">
@@ -78,6 +84,28 @@ export const Almanac: React.FC<AlmanacProps> = ({ inventory, lang, onClose }) =>
                   {(selectedItem as any).flavorText || "A mysterious element forged from the void."}
                 </p>
               </div>
+
+              {/* RECIPE SECTION */}
+              {selectedItem.parents && selectedItem.parents.length > 0 && (
+                 <div className="w-full bg-slate-700/30 rounded-xl p-4 mb-4 text-left">
+                    <span className="text-xs uppercase tracking-wider text-slate-500 font-bold block mb-2">
+                      {getText(lang, 'recipe')}
+                    </span>
+                    <div className="flex items-center justify-center gap-4">
+                        {getParentElements(selectedItem).map((parent, index) => (
+                          <div key={index} className="flex flex-col items-center">
+                            <div className="text-2xl bg-slate-800 rounded-lg w-10 h-10 flex items-center justify-center border border-slate-600 mb-1">
+                              {parent.emoji}
+                            </div>
+                            <span className="text-[10px] text-slate-400 truncate w-16 text-center">{parent.name}</span>
+                          </div>
+                        ))}
+                         {getParentElements(selectedItem).length < 2 && (
+                           <span className="text-xs text-slate-500 italic">Unknown recipe source</span>
+                         )}
+                    </div>
+                 </div>
+              )}
 
               {selectedItem.discoveredAt && (
                 <p className="text-xs text-slate-500">
